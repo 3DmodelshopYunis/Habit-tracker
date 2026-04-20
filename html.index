@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Plan - Mission Tracker</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        #clock {
+            font-size: 1.5rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        #mission-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #00ffcc;
+            text-transform: uppercase;
+        }
+
+        #mission-details {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 90%;
+            line-height: 1.6;
+        }
+
+        #time-range {
+            font-size: 1rem;
+            color: #ffcc00;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        /* Mobil üçün uyğunluq */
+        @media (max-width: 600px) {
+            #mission-name { font-size: 1.8rem; }
+            #mission-details { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="clock">00:00:00</div>
+    <div id="mission-name">Yüklənir...</div>
+    <div id="mission-details">Detallar hazırlanır...</div>
+    <div id="time-range">--:--</div>
+
+    <script>
+        const missions = [
+            { start: "00:00", end: "05:00", name: "Yuxu", details: "Tam istirahət." },
+            { start: "05:00", end: "05:15", name: "Sübh Namazı", details: "15 dəqiqəlik ibadət vaxtı." },
+            { start: "05:15", end: "07:00", name: "Yuxu", details: "İkinci yuxu fazası." },
+            { start: "07:00", end: "07:15", name: "Oyanış & Rutin", details: "Yatağın yığılması və günə hazırlıq." },
+            { start: "07:15", end: "07:20", name: "Keçid", details: "Su (1-ci stəkan)." },
+            { start: "07:20", end: "07:50", name: "Səhər Yeməyi", details: "Qidalanma vaxtı." },
+            { start: "07:50", end: "07:55", name: "Keçid", details: "Hazırlıq üçün 5 dəqiqə." },
+            { start: "07:55", end: "08:25", name: "English: Grammar Rule", details: "Yeni qrammatika qaydasının öyrənilməsi." },
+            { start: "08:25", end: "08:30", name: "Keçid", details: "Su (2-ci stəkan)." },
+            { start: "08:30", end: "09:30", name: "Lüğət (Vocabulary)", details: "1 saatlıq intensiv söz əzbəri." },
+            { start: "09:30", end: "09:35", name: "Keçid", details: "5 dəqiqəlik fasilə." },
+            { start: "09:35", end: "10:05", name: "Müycə Kokteyli", details: "Hazırlanma və qidalanma." },
+            { start: "10:05", end: "10:10", name: "Keçid", details: "Su (3-cü stəkan)." },
+            { start: "10:10", end: "11:40", name: "English Test Practice", details: "1 saat 30 dəqiqəlik əsas test bloku." },
+            { start: "11:40", end: "11:45", name: "Keçid", details: "5 dəqiqəlik fasilə." },
+            { start: "11:45", end: "12:15", name: "SAT Əlavə Test", details: "Yeni vəsaitdən mövzu testi." },
+            { start: "12:15", end: "12:20", name: "Keçid", details: "Su (4-cü stəkan)." },
+            { start: "12:20", end: "13:20", name: "Article Reading", details: "Elmi və ya akademik məqalə oxuma." },
+            { start: "13:20", end: "13:25", name: "Keçid", details: "5 dəqiqəlik fasilə." },
+            { start: "13:25", end: "13:55", name: "Nahar & Namaz", details: "Zöhr və Əsr namazları daxil olmaqla." },
+            { start: "13:55", end: "14:00", name: "Keçid", details: "Su (5-ci stəkan)." },
+            { start: "14:00", end: "14:30", name: "Podcast (YT)", details: "İngilis dilində dinləmə məşqi." },
+            { start: "14:30", end: "14:35", name: "Keçid", details: "Khan Academy (kiçik tapşırıq)." },
+            { start: "14:35", end: "15:05", name: "Məktəb Dərsləri", details: "Ev tapşırıqlarının həlli." },
+            { start: "15:05", end: "15:10", name: "Keçid", details: "5 dəqiqəlik fasilə." },
+            { start: "15:10", end: "17:10", name: "Computer/Project", details: "3D Modeling və rəqəmsal layihələr." },
+            { start: "17:10", end: "17:15", name: "Keçid", details: "Su (6-cı stəkan)." },
+            { start: "17:15", end: "18:15", name: "İdman (Training)", details: "1 saatlıq aktiv məşq." },
+            { start: "18:15", end: "18:20", name: "Keçid", details: "5 dəqiqəlik fasilə." },
+            { start: "18:20", end: "20:20", name: "Movie Night", details: "İngilis dilində film izləmək." },
+            { start: "20:20", end: "20:25", name: "Keçid", details: "Su (7-ci stəkan)." },
+            { start: "20:25", end: "20:55", name: "Şam Yeməyi & Namaz", details: "Şam və Xiftən namazları daxil olmaqla." },
+            { start: "20:55", end: "21:00", name: "Keçid", details: "5 dəqiqəlik fasilə." },
+            { start: "21:00", end: "21:30", name: "Discord Speaking", details: "Danışıq dərslərinə qoşulmaq." },
+            { start: "21:30", end: "21:35", name: "Keçid", details: "Su (8-ci stəkan)." },
+            { start: "21:35", end: "22:35", name: "Kitab Oxumaq", details: "Bədii və ya şəxsi inkişaf kitabı." },
+            { start: "22:35", end: "22:40", name: "Keçid", details: "Khan Academy (son tapşırıq)." },
+            { start: "22:40", end: "23:00", name: "Psixi Vaxt & Hazırlıq", details: "Günü analiz etmək və sabahı planlamaq." },
+            { start: "23:00", end: "23:59", name: "Yuxu", details: "Tam istirahət." }
+        ];
+
+        function updateMission() {
+            const now = new Date();
+            const timeString = now.getHours().toString().padStart(2, '0') + ":" + 
+                               now.getMinutes().toString().padStart(2, '0');
+            const fullTimeString = timeString + ":" + now.getSeconds().toString().padStart(2, '0');
+            
+            document.getElementById('clock').innerText = fullTimeString;
+
+            const currentMission = missions.find(m => timeString >= m.start && timeString < m.end);
+
+            if (currentMission) {
+                document.getElementById('mission-name').innerText = currentMission.name;
+                document.getElementById('mission-details').innerText = currentMission.details;
+                document.getElementById('time-range').innerText = currentMission.start + " – " + currentMission.end;
+            }
+        }
+
+        setInterval(updateMission, 1000);
+        updateMission();
+    </script>
+</body>
+</html>
